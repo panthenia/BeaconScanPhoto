@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="beacon_location">
+        <item>GPS(百度)</item>
+        <item>室内手动点选</item>
+    </string-array>
+    <string-array name="beacon_location_value">
+        <item>gps</item>
+        <item>local</item>
+    </string-array>
+    <string-array name="beacon_sumury">
+        <item>商场</item>
+        <item>公寓</item>
+        <item>教学楼</item>
+    </string-array>
+
+</resources>

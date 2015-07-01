@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="mwBeaconSDK">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/mwBeaconSDK.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/Documents/开发/beacon/xbeaconSdk" />
+    </SOURCES>
+  </library>
+</component>

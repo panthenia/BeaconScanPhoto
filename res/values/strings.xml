@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Beacon记录工具</string>
+    <string name="upload">上报巡检到的Beacons</string>
+    <string name="reset">巡检状态重置</string>
+    <string name="db_name">database</string>
+    <string name="see_scan">查看巡检到的Beacons</string>
+    <string name="login_preference_name">login_preference</string>
+    <string name="CREATE_BEACON_INFO_TABLE">create table if not exists beacon_info
+	    (mac_id text,uuid text, name text,rssi text,  major  text,minor  text,latitude text, longitude text,img text,beizhu text,gaiyao text,lctype text,bd text,fl text);</string>
+</resources>

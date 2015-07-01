@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".MapActivity" >
+    <LinearLayout
+            android:id="@+id/liner_bottom"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+        <Button
+                android:id="@+id/bt_save"
+                android:layout_weight="1"
+                android:text="保存信息并返回"
+                android:onClick="onSaveMap"
+                android:textColor="#ffffff"
+                android:background="@drawable/backcolor_norock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <com.wxq.draw.MapControler
+            android:id="@+id/mapLayout"
+            android:layout_above="@id/liner_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFCFCFCF" />
+
+</RelativeLayout>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:title="功能配置">
+        <ListPreference
+                android:key="beacon_location"
+                android:defaultValue="local"
+                android:title="定位类型"
+                android:summary="选择定位类型，GPS(百度)或室内点选,默认室内点选。"
+                android:entries="@array/beacon_location"
+                android:entryValues="@array/beacon_location_value"
+                android:dialogTitle="选择定位类型" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="默认值配置">
+        <ListPreference
+                android:key="beacon_sumury"
+                android:defaultValue=""
+                android:title="区域选择"
+                android:summary="选择beacon默认所在区域"
+                android:entries="@array/beacon_sumury"
+                android:entryValues="@array/beacon_sumury"
+                />
+        <EditTextPreference
+                android:key="beacon_scan_period"
+                android:defaultValue="1000"
+                android:title="Beacon扫描间隔"
+                android:summary="设置Beacon扫描时间间隔，单位毫秒"
+                />
+        <EditTextPreference
+                android:key="gps_scan_period"
+                android:defaultValue="1000"
+                android:title="GPS请求间隔"
+                android:summary="设置GPS请求时间间隔，单位毫秒"
+                />
+        <EditTextPreference
+                android:key="beacon_expiration_period"
+                android:defaultValue="2000"
+                android:title="Beacon消失间隔"
+                android:summary="超过这个时间未检测到Beacon时认为Beacon离开，单位毫秒"
+                />
+    </PreferenceCategory>
+</PreferenceScreen>
