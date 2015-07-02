@@ -46,8 +46,8 @@ public class PublicData extends Application {
 
     private static PublicData self;
     public ArrayList<DBIbeancon> beacons = new ArrayList<>();
-    public HashSet<String> checkBeaconSet = new HashSet<String>();
-    public HashSet<String> uploadBeaconSet = new HashSet<String>();
+    public HashSet<String> checkBeaconSet = new HashSet<>();
+    public HashSet<String> uploadBeaconSet = new HashSet<>();
     public HashMap<String,DBIbeancon> configedBeacons = new HashMap<>();
 
     public ArrayList<String> beaconDetails = new ArrayList<>();
@@ -122,7 +122,7 @@ public class PublicData extends Application {
     }
     public boolean locatingType;
     public int beaconScanPeriod = 1000,beaconExpirationPeriod = 2000,gpsScanPeriod = 1000;
-    public String defaultSumury;
+    public String defaultSumury = "";
     private String port;
     public double latitude,longitude;
     public LocationClient mLocationClient = null;
@@ -144,7 +144,9 @@ public class PublicData extends Application {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        beaconSumury.add("hello");
+        beaconSumury.add("商场");
+        beaconSumury.add("公寓");
+        beaconSumury.add("教学楼");
         getCheckedBeaconInDb();
         initBaiduLocating();
         initWithConfig();
@@ -155,7 +157,6 @@ public class PublicData extends Application {
     public String getKey() {
         return key;
     }
-
     public void setKey(String key) {
         this.key = key;
     }
@@ -233,6 +234,23 @@ public class PublicData extends Application {
         locationClientOption.setCoorType("bd09ll");
         locationClientOption.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         mLocationClient.setLocOption(locationClientOption);
+    }
+    public void resetStatus(){
+        checkBeaconSet.clear();
+        configedBeacons.clear();
+        uploadBeaconSet.clear();
+        SQLiteDatabase db = du.getReadableDatabase();
+
+        try {
+            if(db.isOpen()){
+                db.delete("beacon_info",null,null);
+                db.delete("upload_beacon",null,null);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            //db.close();
+        }
     }
     public void initWithConfig(){
         SharedPreferences pre = PreferenceManager.getDefaultSharedPreferences(this);
@@ -312,45 +330,34 @@ public class PublicData extends Application {
         return true;
     }
 
-    public void removeCheckedBeaconInDb(){
+    public void saveUploadedBeacon(){
         SQLiteDatabase db = du.getReadableDatabase();
-        String sql = "delete from unupbeacon";
-        String sql1 = "delete from beacon_location";
-        try {
-            if(db.isOpen()){
-                db.execSQL(sql);
-                db.execSQL(sql1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            //db.close();
+        ContentValues cv = new ContentValues();
+        for (String s:uploadBeaconSet){
+            cv.put("mac_id",s);
+            db.insert("upload_beacon",null,cv);
+            cv.clear();
         }
     }
-    public void removeUploadCheckedBeaconInDb(){
+    public void getUploadedBeacon(){
         SQLiteDatabase db = du.getReadableDatabase();
 
-        String sql = "delete from unupbeacon where mac_id = '";
-        try {
-            for(String mac:uploadBeaconSet){
-                sql += mac+"';";
-                db.execSQL(sql);
+        Cursor cursor = db.query("upload_beacon",null,null,null,null,null,null);
+        if (cursor != null){
+            while (cursor.moveToNext()){
+                uploadBeaconSet.add(cursor.getString(0));
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            //db.close();
+            cursor.close();
         }
+
     }
     public void getCheckedBeaconInDb() {
         SQLiteDatabase db = du.getReadableDatabase();
-        String sql;
         Cursor cursor;
         // area text,type text,time text,val text
-        sql = "select * from beacon_info";
         try {
-            cursor = db.rawQuery(sql, null);
+            cursor = db.query("beacon_info",null,null,null,null,null,null);
             if (cursor != null) {
                 while (cursor.moveToNext()) {//直到返回false说明表中到了数据末尾
                     DBIbeancon ibeacon = new DBIbeancon();
@@ -379,10 +386,11 @@ public class PublicData extends Application {
                     //ibeacon.setLat(Double.valueOf(cursor.getString(cursor.getColumnIndex("latitude"))));
                     //ibeacon.setLon(Double.valueOf(cursor.getString(cursor.getColumnIndex("longitude"))));
                 }
+                cursor.close();
             }
+
         } catch (SQLException e) {
         } finally {
-            //db.close();
         }
     }
 }

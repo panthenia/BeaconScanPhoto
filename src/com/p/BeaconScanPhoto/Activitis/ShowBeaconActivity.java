@@ -17,6 +17,7 @@ import com.p.BeaconScanPhoto.R;
 
 /**
  * Created by p on 2015/7/1.
+ *  已配置的Beacon显示
  */
 public class ShowBeaconActivity extends Activity {
     private ListView beaconListView = null;
@@ -49,11 +50,32 @@ public class ShowBeaconActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 IBeacon beacon = (IBeacon) adapterView.getAdapter().getItem(i);
                 Intent intent = new Intent(ShowBeaconActivity.this, MoreBeaconInfo.class);
-                intent.putExtra("old",true);
+                intent.putExtra("old", true);
                 intent.putExtra("mac", beacon.getBluetoothAddress());
                 startActivity(intent);
             }
         });
     }
-
+    public void onButtonClicked(View v){
+        Intent intent = null;
+        switch (v.getId()){
+            case R.id.bt_upload:
+//                if(PublicData.getInstance().isNetworkAvailable()) {
+//                    if(PublicData.getInstance().isLogin()){
+//                        intent = new Intent(BeaconListActivity.this, NetWorkService.class);
+//                        intent.putExtra("ActivityName", BeaconListActivity.class.getName());
+//                        intent.putExtra("ReuqestType", "upload_checked");
+//                        startService(intent);
+//                        Toast.makeText(this, "开始上传...", Toast.LENGTH_SHORT).show();
+//                    }else {
+//                        intent = new Intent(BeaconListActivity.this,LoginActivity.class);
+//                        startActivityForResult(intent,5);
+//                    }
+//
+//                }else{
+//                    Toast.makeText(BeaconListActivity.this, "当前无网络连接！", Toast.LENGTH_SHORT).show();
+//                }
+                break;
+        }
+    }
 }

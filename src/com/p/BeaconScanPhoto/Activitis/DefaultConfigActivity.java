@@ -14,6 +14,8 @@ import com.p.BeaconScanPhoto.R;
 
 /**
  * Created by p on 2015/6/29.
+ * 配置界面
+ *
  */
 public class DefaultConfigActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
     @Override
@@ -61,7 +63,7 @@ public class DefaultConfigActivity extends PreferenceActivity implements SharedP
                 PublicData.getInstance().setLocationType(PublicData.LOCATE_GPS);
             }
         }else if (s.contains("beacon_sumury")){
-
+            PublicData.getInstance().defaultSumury = val;
         }else if (s.contains("beacon_scan_period")){
             int tval;
             try {

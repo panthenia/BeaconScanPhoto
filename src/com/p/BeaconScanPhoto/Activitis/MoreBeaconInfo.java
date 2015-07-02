@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.*;
 import com.p.BeaconScanPhoto.DataType.DBIbeancon;
@@ -23,6 +24,8 @@ import java.util.Iterator;
 
 /**
  * Created by p on 2015/6/27.
+ * Beacon详情界面
+ *
  */
 public class MoreBeaconInfo extends Activity {
     public static final int REQUEST_CODE_CAMERA = 1;
@@ -111,6 +114,8 @@ public class MoreBeaconInfo extends Activity {
         ArrayAdapter adapter1 = new ArrayAdapter(this,android.R.layout.simple_list_item_1, PublicData.getInstance().beaconSumury);
         beacon_detail.setAdapter(adapter);
         beacon_sumury.setAdapter(adapter1);
+        int si = PublicData.getInstance().beaconSumury.indexOf(PublicData.getInstance().defaultSumury);
+        beacon_sumury.setSelection(si==-1?0:si);
         newImgLayout.height = DensityUtil.dip2px(this,150);
         newImgLayout.weight = DensityUtil.dip2px(this,120);
         newImgLayout.rightMargin = DensityUtil.dip2px(this,10);
@@ -138,7 +143,7 @@ public class MoreBeaconInfo extends Activity {
 
     }
     public void onUIClicked(View v){
-        Intent intent = null;
+        Intent intent;
         switch (v.getId()){
             case R.id.beacon_img:
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -182,6 +187,17 @@ public class MoreBeaconInfo extends Activity {
                 }
                 break;
         }
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            for (Bitmap bitmap :beacon_imgs.values()){
+                bitmap.recycle();
+            }
+            finish();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -240,14 +256,7 @@ public class MoreBeaconInfo extends Activity {
                                     }
                                 });
                             }
-                            //thumbnail.recycle();
-                            //得到bitmap后的操作
                         }
-                    }else{
-                        //由于指定了目标uri，存储在目标uri，intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                        // 通过目标uri，找到图片
-                        // 对图片的缩放处理
-                        // 操作
                     }
                 }
         }

@@ -10,24 +10,22 @@
             android:id="@+id/bts_layout"
             android:layout_alignParentBottom="true"
             android:layout_height="50dp">
-
+            <Button
+                    android:id="@+id/bt_reset"
+                    android:layout_weight="1"
+                    android:text="状态重置"
+                    android:textColor="#ffffff"
+                    android:onClick="onButtonClicked"
+                    android:background="@drawable/backcolor_norock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    />
         <Button
                 android:id="@+id/bt_see"
                 android:layout_weight="1"
-                android:text="查看"
+                android:text="已配置Beacon"
                 android:textColor="#ffffff"
                 android:onClick="onButtonClicked"
-                android:background="@drawable/backcolor_norock"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                />
-
-        <Button
-                android:id="@+id/bt_upload"
-                android:layout_weight="1"
-                android:text="上传"
-                android:onClick="onButtonClicked"
-                android:textColor="#ffffff"
                 android:background="@drawable/backcolor_norock"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -36,7 +34,7 @@
         <Button
                 android:id="@+id/bt_config"
                 android:layout_weight="1"
-                android:text="设置"
+                android:text="程序设置"
                 android:onClick="onButtonClicked"
                 android:textColor="#ffffff"
                 android:background="@drawable/backcolor_norock"

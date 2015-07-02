@@ -8,4 +8,7 @@
     <string name="login_preference_name">login_preference</string>
     <string name="CREATE_BEACON_INFO_TABLE">create table if not exists beacon_info
 	    (mac_id text,uuid text, name text,rssi text,  major  text,minor  text,latitude text, longitude text,img text,beizhu text,gaiyao text,lctype text,bd text,fl text);</string>
+    <string name="CREATE_UPLOAD_INFO_TABLE">
+        create table if not exists upload_beacon(mac_id text);
+    </string>
 </resources>

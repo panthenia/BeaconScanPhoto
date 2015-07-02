@@ -9,6 +9,7 @@ import android.util.Log;
 import com.lef.scanner.IBeacon;
 import com.p.BeaconScanPhoto.Activitis.LoginActivity;
 import com.p.BeaconScanPhoto.Activitis.BeaconListActivity;
+import com.p.BeaconScanPhoto.DataType.DBIbeancon;
 import com.p.BeaconScanPhoto.DataType.PublicData;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -126,26 +127,30 @@ public class NetWorkService extends IntentService {
                         url = new URL(UPLOAD_URL);
                         String data;
                         JSONArray jsonArray = new JSONArray();
-                        ArrayList<IBeacon> upBeacons = new ArrayList<IBeacon>();
-                        for (IBeacon ibeacon : publicData.beacons){
+                        ArrayList<DBIbeancon> upBeacons = new ArrayList<>();
+                        for (DBIbeancon ibeacon : publicData.configedBeacons.values()){
                             if(!publicData.uploadBeaconSet.contains(ibeacon.getBluetoothAddress()))
                                 upBeacons.add(ibeacon);
                         }
-                        for (IBeacon ibeacon : upBeacons) {
+                        for (DBIbeancon ibeacon : upBeacons) {
                             JSONObject jsonObject = new JSONObject();
 
-                            jsonObject.put("mac", ibeacon.getBluetoothAddress());
+                            jsonObject.put("mac_id", ibeacon.getBluetoothAddress());
                             jsonObject.put("major", String.valueOf(ibeacon.getMajor()));
                             jsonObject.put("minor", String.valueOf(ibeacon.getMinor()));
-                            jsonObject.put("rssi", String.valueOf(ibeacon.getRssi()));
+                            //jsonObject.put("rssi", String.valueOf(ibeacon.getRssi()));
                             jsonObject.put("uuid", ibeacon.getProximityUuid());
                             jsonObject.put("id", publicData.getImei());
+                            jsonObject.put("address", "");
                             jsonObject.put("time", current_time);
+                            if (ibeacon.getLocationType() == PublicData.LOCATE_LOCAL){
+
+                            }
                             jsonObject.put("building", "");
                             jsonObject.put("floor", "");
                             jsonObject.put("coord_x", "");
                             jsonObject.put("coord_y", "");
-                            jsonObject.put("address", "");
+
                             jsonObject.put("latitude", "");
                             jsonObject.put("longitude", "");
                             jsonObject.put("status", "");
@@ -175,7 +180,7 @@ public class NetWorkService extends IntentService {
                             for (IBeacon ibeacon : upBeacons) {
                                 publicData.uploadBeaconSet.add(ibeacon.getBluetoothAddress());
                             }
-                            PublicData.getInstance().removeUploadCheckedBeaconInDb();
+                            PublicData.getInstance().saveUploadedBeacon();
                             msg.what = BeaconListActivity.REQUEST_FINISH_SUCCESS;
                             ahandler.sendMessage(msg);
                         } else {

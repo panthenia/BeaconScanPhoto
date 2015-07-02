@@ -18,14 +18,16 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by p on 2015/4/2.
+ *
+ * Beacon列表适配器
  */
 public class BeaconListAdapter extends BaseAdapter {
     Context context = null;
     private ArrayList<IBeacon> mIBeaconDataset;
     LayoutInflater inflater = null;
     private ReentrantLock dataLock = null;
-    public BeaconListAdapter(Context context){
-        context = context;
+    public BeaconListAdapter(Context ctx){
+        this.context = ctx;
         mIBeaconDataset = new ArrayList<>();
         inflater = LayoutInflater.from(context);
         dataLock = new ReentrantLock();
@@ -60,7 +62,7 @@ public class BeaconListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ViewHoldler holder = null;
+        ViewHoldler holder;
         dataLock.lock();
         if (position >= mIBeaconDataset.size()){
             dataLock.unlock();
@@ -84,7 +86,9 @@ public class BeaconListAdapter extends BaseAdapter {
             if (holder.mac != null) {
                 if (PublicData.getInstance().checkBeaconSet.contains(beacon.getBluetoothAddress())){
                     holder.mac.setTextColor(Color.RED);
-                }else {
+                }else if(PublicData.getInstance().uploadBeaconSet.contains(beacon.getBluetoothAddress())){
+                    holder.mac.setTextColor(Color.GREEN);
+                }else{
                     holder.mac.setTextColor(Color.argb(0xff,0x01,0x80,0xd5));
                 }
                 holder.mac.setText(beacon.getBluetoothAddress());
@@ -109,6 +113,8 @@ public class BeaconListAdapter extends BaseAdapter {
             holder.upload = (ImageView) convertView.findViewById(R.id.upload_img);
             if (PublicData.getInstance().checkBeaconSet.contains(beacon.getBluetoothAddress())){
                 holder.mac.setTextColor(Color.RED);
+            }else if(PublicData.getInstance().uploadBeaconSet.contains(beacon.getBluetoothAddress())){
+                holder.mac.setTextColor(Color.GREEN);
             }
             if (holder.major != null)
                 holder.major.setText(String.valueOf(beacon.getMajor()));

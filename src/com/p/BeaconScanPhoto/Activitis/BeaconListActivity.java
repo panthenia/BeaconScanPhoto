@@ -14,6 +14,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -143,6 +144,8 @@ public class BeaconListActivity extends Activity implements IBeaconConsumer {
             }).create().show();
         } else {
             //设置beacon扫描间隔时间
+            //Log.d("times",String.valueOf(PublicData.getInstance().beaconExpirationPeriod));
+            //Log.d("times",String.valueOf(PublicData.getInstance().beaconScanPeriod));
             iBeaconManager.setInside_expiration_millis(PublicData.getInstance().beaconExpirationPeriod);
             iBeaconManager.setForegroundScanPeriod(PublicData.getInstance().beaconScanPeriod);
             iBeaconManager.bind(this);
@@ -263,22 +266,19 @@ public class BeaconListActivity extends Activity implements IBeaconConsumer {
                 intent = new Intent(this,ShowBeaconActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.bt_upload:
-//                if(PublicData.getInstance().isNetworkAvailable()) {
-//                    if(PublicData.getInstance().isLogin()){
-//                        intent = new Intent(BeaconListActivity.this, NetWorkService.class);
-//                        intent.putExtra("ActivityName", BeaconListActivity.class.getName());
-//                        intent.putExtra("ReuqestType", "upload_checked");
-//                        startService(intent);
-//                        Toast.makeText(this, "开始上传...", Toast.LENGTH_SHORT).show();
-//                    }else {
-//                        intent = new Intent(BeaconListActivity.this,LoginActivity.class);
-//                        startActivityForResult(intent,5);
-//                    }
-//
-//                }else{
-//                    Toast.makeText(BeaconListActivity.this, "当前无网络连接！", Toast.LENGTH_SHORT).show();
-//                }
+            case R.id.bt_reset:
+                new AlertDialog.Builder(this)
+                        .setTitle("提示")
+                        .setMessage("是否重置状态，所有已配置的数据将会清除！")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                PublicData.getInstance().resetStatus();
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .create()
+                        .show();
                 break;
         }
     }
