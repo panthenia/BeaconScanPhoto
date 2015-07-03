@@ -332,8 +332,8 @@ public class MapActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent();
                         if (newLocSeted) {
-                            intent.putExtra("bd", newBuilding);
-                            intent.putExtra("fl", newFloor);
+                            intent.putExtra("bd", getNewBuilding());
+                            intent.putExtra("fl", getNewFloor());
                             intent.putExtra("nx", newcx);
                             intent.putExtra("ny", newcy);
                             setResult(0,intent);

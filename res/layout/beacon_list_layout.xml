@@ -34,7 +34,7 @@
         <Button
                 android:id="@+id/bt_config"
                 android:layout_weight="1"
-                android:text="程序设置"
+                android:text="设置"
                 android:onClick="onButtonClicked"
                 android:textColor="#ffffff"
                 android:background="@drawable/backcolor_norock"

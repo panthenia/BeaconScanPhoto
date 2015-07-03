@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="beacon_location">
-        <item>GPS(百度)需要连接网络</item>
+        <item>GPS(百度自动)需要网络连接，GPS</item>
         <item>室内手动点选</item>
     </string-array>
     <string-array name="beacon_location_value">
@@ -9,9 +9,25 @@
         <item>local</item>
     </string-array>
     <string-array name="beacon_sumury">
-        <item>商场</item>
-        <item>公寓</item>
-        <item>教学楼</item>
+        <item>商业Mall</item>
+        <item>专卖店</item>
+        <item>超市</item>
+        <item>活动</item>
+        <item>景区</item>
+        <item>媒体</item>
+        <item>广场</item>
+        <item>车站</item>
+        <item>机场</item>
+        <item>交通工具</item>
+        <item>移动人员</item>
+        <item>演艺活动</item>
+        <item>公共设施</item>
+        <item>办公室</item>
+        <item>小区</item>
+        <item>园区</item>
+        <item>餐饮</item>
+        <item>影院</item>
+        <item>体育场</item>
     </string-array>
 
 </resources>

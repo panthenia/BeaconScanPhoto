@@ -105,7 +105,7 @@ public class DBIbeancon extends IBeacon {
     private double lat,lon;
 
     public String getBuilding() {
-        return building;
+        return this.building;
     }
 
     public void setBuilding(String building) {
@@ -113,7 +113,7 @@ public class DBIbeancon extends IBeacon {
     }
 
     public String getFloor() {
-        return floor;
+        return this.floor;
     }
 
     public void setFloor(String floor) {

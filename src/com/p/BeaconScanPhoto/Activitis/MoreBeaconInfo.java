@@ -212,7 +212,7 @@ public class MoreBeaconInfo extends Activity {
                         x = data.getFloatExtra("nx", 0);
                     if (data.hasExtra("ny"))
                         y = data.getFloatExtra("ny",0);
-                    locationVal.setText(String.format("Floor:%s-X:%s-Y:%s",fl,x,y));
+                    locationVal.setText(String.format("Building:%s-Floor:%s-X:%s-Y:%s",bd,fl,x,y));
 
                 }
                 break;

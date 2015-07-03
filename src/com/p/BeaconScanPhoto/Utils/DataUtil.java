@@ -26,6 +26,7 @@ public class DataUtil extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // TODO Auto-generated method stub
         db.execSQL(ctx.getString(R.string.CREATE_BEACON_INFO_TABLE));
+        db.execSQL(ctx.getString(R.string.CREATE_UPLOAD_INFO_TABLE));
     }
 
     @Override

@@ -24,26 +24,78 @@ import com.p.BeaconScanPhoto.DataType.PublicData;
 import com.p.BeaconScanPhoto.R;
 import com.p.BeaconScanPhoto.Utils.NetWorkService;
 
+import java.lang.ref.WeakReference;
+
 
 /**
  * 登录的activity
  */
 public class LoginActivity extends Activity {
-    ProgressDialog pro_dialog;
+    private ProgressDialog pro_dialog;
     public final static int LOGIN_SUCCESS = 2;
     public final static int SERVER_ERR = 3;
     public final static int LOGIN_FAIL_NO_ACCOUNT = 4;
     public final static int LOGIN_FAIL_NO_ACCOUNT_AND_PSW = 5;
     public final static int LOGIN_FAIL_ALREADY_LOGIN = 6;
-    EditText act_et,psd_et;
-    public Handler mhandler;
+    public final static int REQUEST_LOGIN_CODE = 6;
+    public final static int LOGIN_CANCEL = 7;
 
+    EditText act_et,psd_et;
+    public Handler mhandler = new MyHandler(this);
+    private static class MyHandler extends Handler{
+        private final WeakReference<LoginActivity> mActivity;
+
+        public MyHandler(LoginActivity activity) {
+            mActivity = new WeakReference<LoginActivity>(activity);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            LoginActivity activity = mActivity.get();
+            if (activity != null) {
+                if (msg.what == LOGIN_SUCCESS){
+                    activity.pro_dialog.dismiss();
+                    PublicData.getInstance().setLogin(true);
+                    activity.setResult(LOGIN_SUCCESS);
+                    activity.finish();
+                }else if(msg.what == LOGIN_FAIL_NO_ACCOUNT || msg.what == LOGIN_FAIL_ALREADY_LOGIN
+                        || msg.what == LOGIN_FAIL_NO_ACCOUNT_AND_PSW || msg.what == SERVER_ERR){
+                    String errmsg = null;
+                    switch (msg.what){
+                        case LOGIN_FAIL_ALREADY_LOGIN:
+                            errmsg = "账户已经登录，请勿重复登录！";
+                            break;
+                        case LOGIN_FAIL_NO_ACCOUNT:
+                            errmsg = "无此账户！";
+                            break;
+                        case LOGIN_FAIL_NO_ACCOUNT_AND_PSW:
+                            errmsg = "帐号或密码错误！";
+                            break;
+                        case SERVER_ERR:
+                            errmsg = "服务器返回数据错误！";
+                            break;
+                    }
+                    activity.pro_dialog.dismiss();
+                    AlertDialog.Builder builder  = new AlertDialog.Builder(activity);
+                    builder.setTitle("登录失败");
+                    builder.setMessage(errmsg);
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
+                }
+            }
+            super.handleMessage(msg);
+        }
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.login_activity);
-        getActionBar().setTitle("巡检工具");
+        getActionBar().setTitle("登录");
         int actionBarTitleId = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
         if (actionBarTitleId > 0) {
             TextView title = (TextView) findViewById(actionBarTitleId);
@@ -62,45 +114,7 @@ public class LoginActivity extends Activity {
             act_et.setText(PublicData.getInstance().getUser());
             psd_et.setText(PublicData.getInstance().getPsw());
         }
-        mhandler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == LOGIN_SUCCESS){
-                    pro_dialog.dismiss();
-                    PublicData.getInstance().setLogin(true);
-                    setResult(5);
-                    finish();
-                }else if(msg.what == LOGIN_FAIL_NO_ACCOUNT || msg.what == LOGIN_FAIL_ALREADY_LOGIN
-                        || msg.what == LOGIN_FAIL_NO_ACCOUNT_AND_PSW || msg.what == SERVER_ERR){
-                    String errmsg = null;
-                    switch (msg.what){
-                        case LOGIN_FAIL_ALREADY_LOGIN:
-                            errmsg = "账户已经登录，请勿重复登录！";
-                                    break;
-                        case LOGIN_FAIL_NO_ACCOUNT:
-                            errmsg = "无此账户！";
-                            break;
-                        case LOGIN_FAIL_NO_ACCOUNT_AND_PSW:
-                            errmsg = "帐号或密码错误！";
-                            break;
-                        case SERVER_ERR:
-                            errmsg = "服务器返回数据错误！";
-                            break;
-                    }
-                    pro_dialog.dismiss();
-                    AlertDialog.Builder builder  = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setTitle("登录失败");
-                    builder.setMessage(errmsg);
-                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.create().show();
-                }
-            }
-        };
+
         PublicData.getInstance().getHandlerHashMap().put(getClass().getName(),mhandler);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +168,7 @@ public class LoginActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK){
-            setResult(2);
+            setResult(LOGIN_CANCEL);
             finish();
             return false;
         }

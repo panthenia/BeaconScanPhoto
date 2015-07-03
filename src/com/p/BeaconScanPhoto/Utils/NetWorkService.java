@@ -9,16 +9,14 @@ import android.util.Log;
 import com.lef.scanner.IBeacon;
 import com.p.BeaconScanPhoto.Activitis.LoginActivity;
 import com.p.BeaconScanPhoto.Activitis.BeaconListActivity;
+import com.p.BeaconScanPhoto.Activitis.ShowBeaconActivity;
 import com.p.BeaconScanPhoto.DataType.DBIbeancon;
 import com.p.BeaconScanPhoto.DataType.PublicData;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -31,7 +29,7 @@ import java.util.Date;
  */
 public class NetWorkService extends IntentService {
     private static final String LOGIN_URL = "http://" + PublicData.getInstance().getIp() + ":" + PublicData.getInstance().getPort() + "/beacon/patrol!login";
-    private static final String UPLOAD_URL = "http://" + PublicData.getInstance().getIp() + ":" + PublicData.getInstance().getPort() + "/beacon/patrol!report";
+    private static final String UPLOAD_URL = "http://" + PublicData.getInstance().getIp() + ":" + PublicData.getInstance().getPort() + "/beacon/patrol!re_deploy";
 
     public NetWorkService() {
         super("NetWorkService");
@@ -135,25 +133,28 @@ public class NetWorkService extends IntentService {
                         for (DBIbeancon ibeacon : upBeacons) {
                             JSONObject jsonObject = new JSONObject();
 
-                            jsonObject.put("mac_id", ibeacon.getBluetoothAddress());
+                            jsonObject.put("mac", ibeacon.getBluetoothAddress());
                             jsonObject.put("major", String.valueOf(ibeacon.getMajor()));
                             jsonObject.put("minor", String.valueOf(ibeacon.getMinor()));
-                            //jsonObject.put("rssi", String.valueOf(ibeacon.getRssi()));
+                            jsonObject.put("rssi", String.valueOf(ibeacon.getRssi()));
                             jsonObject.put("uuid", ibeacon.getProximityUuid());
                             jsonObject.put("id", publicData.getImei());
-                            jsonObject.put("address", "");
+                            jsonObject.put("address", ibeacon.getDetail());
+                            jsonObject.put("address_type",ibeacon.getSumury());
                             jsonObject.put("time", current_time);
+                            Log.d("updebug","bd:"+ibeacon.getBuilding()+"fl:"+ibeacon.getFloor());
                             if (ibeacon.getLocationType() == PublicData.LOCATE_LOCAL){
+                                jsonObject.put("building", ibeacon.getBuilding());
+                                jsonObject.put("floor", ibeacon.getFloor());
 
+                            }else {
+                                jsonObject.put("building", "-1");
+                                jsonObject.put("floor", "");
                             }
-                            jsonObject.put("building", "");
-                            jsonObject.put("floor", "");
-                            jsonObject.put("coord_x", "");
-                            jsonObject.put("coord_y", "");
 
-                            jsonObject.put("latitude", "");
-                            jsonObject.put("longitude", "");
-                            jsonObject.put("status", "");
+                            jsonObject.put("coord_x", ibeacon.getLat());
+                            jsonObject.put("coord_y", ibeacon.getLon());
+                            jsonObject.put("status", "2");
                             jsonObject.put("type", "1");
                             jsonArray.put(jsonObject);
                         }
@@ -180,15 +181,24 @@ public class NetWorkService extends IntentService {
                             for (IBeacon ibeacon : upBeacons) {
                                 publicData.uploadBeaconSet.add(ibeacon.getBluetoothAddress());
                             }
+
+                            //上传图片文件
+                            FilePicker filePicker = new FilePicker();
+                            for (DBIbeancon ibeancon:upBeacons){
+                                for (String s:ibeancon.getImgs()){
+                                    File afile = new File(getApplication().getFilesDir(),s);
+                                    filePicker.uploadFileToStrusServer(afile);
+                                }
+                            }
                             PublicData.getInstance().saveUploadedBeacon();
-                            msg.what = BeaconListActivity.REQUEST_FINISH_SUCCESS;
+                            msg.what = ShowBeaconActivity.REQUEST_FINISH_SUCCESS;
                             ahandler.sendMessage(msg);
                         } else {
                             if (rejson.getString("message").contains("数据格式错误")) {
-                                msg.what = BeaconListActivity.REQUEST_FINISH_FAIL;
+                                msg.what = ShowBeaconActivity.REQUEST_FINISH_FAIL;
                                 ahandler.sendMessage(msg);
                             } else if (rejson.getString("message").contains("tempid_time_out")) {
-                                msg.what = BeaconListActivity.KEY_TIME_OUT;
+                                msg.what = ShowBeaconActivity.KEY_TIME_OUT;
                                 ahandler.sendMessage(msg);
                             }
                         }

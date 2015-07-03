@@ -84,10 +84,10 @@ public class BeaconListAdapter extends BaseAdapter {
                 holder.minor.setText(String.valueOf(beacon.getMinor()));
 
             if (holder.mac != null) {
-                if (PublicData.getInstance().checkBeaconSet.contains(beacon.getBluetoothAddress())){
-                    holder.mac.setTextColor(Color.RED);
-                }else if(PublicData.getInstance().uploadBeaconSet.contains(beacon.getBluetoothAddress())){
+                if (PublicData.getInstance().uploadBeaconSet.contains(beacon.getBluetoothAddress())){
                     holder.mac.setTextColor(Color.GREEN);
+                }else if(PublicData.getInstance().checkBeaconSet.contains(beacon.getBluetoothAddress())){
+                    holder.mac.setTextColor(Color.RED);
                 }else{
                     holder.mac.setTextColor(Color.argb(0xff,0x01,0x80,0xd5));
                 }
@@ -111,10 +111,10 @@ public class BeaconListAdapter extends BaseAdapter {
             holder.uuid = (TextView)convertView.findViewById(R.id.tv_uuid);
             holder.name = (TextView)convertView.findViewById(R.id.tv_cmp);
             holder.upload = (ImageView) convertView.findViewById(R.id.upload_img);
-            if (PublicData.getInstance().checkBeaconSet.contains(beacon.getBluetoothAddress())){
-                holder.mac.setTextColor(Color.RED);
-            }else if(PublicData.getInstance().uploadBeaconSet.contains(beacon.getBluetoothAddress())){
+            if (PublicData.getInstance().uploadBeaconSet.contains(beacon.getBluetoothAddress())){
                 holder.mac.setTextColor(Color.GREEN);
+            }else if(PublicData.getInstance().checkBeaconSet.contains(beacon.getBluetoothAddress())){
+                holder.mac.setTextColor(Color.RED);
             }
             if (holder.major != null)
                 holder.major.setText(String.valueOf(beacon.getMajor()));

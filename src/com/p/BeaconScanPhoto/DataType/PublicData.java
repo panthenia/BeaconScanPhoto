@@ -130,6 +130,7 @@ public class PublicData extends Application {
     public BDLocationListener myListener = new BDLocationListener() {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
+            Log.d("baidu",""+latitude+"-"+longitude);
             latitude = bdLocation.getLatitude();
             longitude = bdLocation.getLongitude();
         }
@@ -144,10 +145,27 @@ public class PublicData extends Application {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        beaconSumury.add("商场");
-        beaconSumury.add("公寓");
-        beaconSumury.add("教学楼");
+        beaconSumury.add("商业Mall");
+        beaconSumury.add("专卖店");
+        beaconSumury.add("超市");
+        beaconSumury.add("活动");
+        beaconSumury.add("景区");
+        beaconSumury.add("媒体");
+        beaconSumury.add("广场");
+        beaconSumury.add("车站");
+        beaconSumury.add("机场");
+        beaconSumury.add("交通工具");
+        beaconSumury.add("移动人员");
+        beaconSumury.add("演艺活动");
+        beaconSumury.add("公共设施");
+        beaconSumury.add("办公室");
+        beaconSumury.add("小区");
+        beaconSumury.add("园区");
+        beaconSumury.add("餐饮");
+        beaconSumury.add("影院");
+        beaconSumury.add("体育场");
         getCheckedBeaconInDb();
+        getUploadedBeacon();
         initBaiduLocating();
         initWithConfig();
     }
@@ -181,7 +199,7 @@ public class PublicData extends Application {
         return md5StrBuff.toString();
     }
     public String saveBeaconImg2File(String bmac, Bitmap bitmap){
-        String fname = bmac+ "-" + java.util.UUID.randomUUID().toString()+".png";
+        String fname = bmac+ "-" + System.currentTimeMillis()+".png";
         try {
             FileOutputStream fileOutputStream = openFileOutput(fname, Context.MODE_PRIVATE);
             bitmap.compress(Bitmap.CompressFormat.PNG,100,fileOutputStream);
@@ -233,8 +251,8 @@ public class PublicData extends Application {
         locationClientOption.setOpenGps(true);
         locationClientOption.setCoorType("bd09ll");
         locationClientOption.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-        mLocationClient.setLocOption(locationClientOption);
     }
+
     public void resetStatus(){
         checkBeaconSet.clear();
         configedBeacons.clear();
@@ -261,7 +279,7 @@ public class PublicData extends Application {
         }
         else setLocationType(LOCATE_LOCAL);
 
-        defaultSumury = pre.getString("beacon_sumury","");
+        defaultSumury = pre.getString("beacon_sumury","商业Mall");
         String s = pre.getString("beacon_scan_period","1000");
         try {
             beaconScanPeriod = Integer.valueOf(s);
@@ -286,6 +304,7 @@ public class PublicData extends Application {
                 gpsScanPeriod = 1000;
             }
             locationClientOption.setScanSpan(gpsScanPeriod);
+            mLocationClient.setLocOption(locationClientOption);
             mLocationClient.start();
             mLocationClient.requestLocation();
         }else{
@@ -324,7 +343,7 @@ public class PublicData extends Application {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            db.close();
+            //db.close();
         }
         Log.d("save beacon",String.valueOf(result));
         return true;
@@ -373,7 +392,7 @@ public class PublicData extends Application {
                     ibeacon.setLocationType(Boolean.valueOf(cursor.getString(cursor.getColumnIndex("lctype"))));
                     String imgs = cursor.getString(cursor.getColumnIndex("img"));
                     ibeacon.setBuilding(cursor.getString(cursor.getColumnIndex("bd")));
-                    ibeacon.setBuilding(cursor.getString(cursor.getColumnIndex("fl")));
+                    ibeacon.setFloor(cursor.getString(cursor.getColumnIndex("fl")));
                     ibeacon.setLon(Double.valueOf(cursor.getString(cursor.getColumnIndex("longitude"))));
                     ibeacon.setLat(Double.valueOf(cursor.getString(cursor.getColumnIndex("latitude"))));
                     if (imgs.length() > 0){

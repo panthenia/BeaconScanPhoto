@@ -52,7 +52,7 @@
             android:icon="@drawable/radio_tower">
         <meta-data
                 android:name="com.baidu.lbsapi.API_KEY"
-                android:value="ZxyfTNGMn1fCFP0i0ADcL3Zy" />
+                android:value="WxBsqNbOpkRS8NhKX2wuV4tO" />
         <activity
                 android:name=".Activitis.BeaconListActivity"
                 android:theme="@android:style/Theme.Holo.Light"
@@ -74,7 +74,13 @@
         <activity
                 android:theme="@android:style/Theme.Holo.Light"
                 android:name=".Activitis.ShowBeaconActivity"/>
-        <!-- sdk服务 -->
+        <activity android:name=".Activitis.LoginActivity"
+                  android:screenOrientation="portrait"
+                  android:theme="@android:style/Theme.Holo.Light"/>
+        <activity android:name=".Activitis.NetworkActivity"
+                  android:theme="@android:style/Theme.Holo.Light"
+                  android:screenOrientation="portrait"/>
+        <!-- 服务配置 -->
         <service android:name="com.lef.ibeacon.service.UpdateService" />
         <service
                 android:name="com.lef.ibeacon.service.IBeaconService"
@@ -95,7 +101,8 @@
                 <action android:name="com.lef.ibeacon.DID_MONITORING" />
             </intent-filter>
         </service>
-        <!--<service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">-->
-        <!--</service>-->
+        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
+        </service>
+        <service android:name=".Utils.NetWorkService"/>
     </application>
 </manifest>

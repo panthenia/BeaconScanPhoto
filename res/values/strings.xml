@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Beacon记录工具</string>
+    <string name="app_name">Beacon部署工具</string>
     <string name="upload">上报巡检到的Beacons</string>
     <string name="reset">巡检状态重置</string>
     <string name="db_name">database</string>
