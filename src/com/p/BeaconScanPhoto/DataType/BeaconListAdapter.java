@@ -85,7 +85,7 @@ public class BeaconListAdapter extends BaseAdapter {
 
             if (holder.mac != null) {
                 if (PublicData.getInstance().uploadBeaconSet.contains(beacon.getBluetoothAddress())){
-                    holder.mac.setTextColor(Color.GREEN);
+                    holder.mac.setTextColor(Color.BLACK);
                 }else if(PublicData.getInstance().checkBeaconSet.contains(beacon.getBluetoothAddress())){
                     holder.mac.setTextColor(Color.RED);
                 }else{
@@ -112,7 +112,7 @@ public class BeaconListAdapter extends BaseAdapter {
             holder.name = (TextView)convertView.findViewById(R.id.tv_cmp);
             holder.upload = (ImageView) convertView.findViewById(R.id.upload_img);
             if (PublicData.getInstance().uploadBeaconSet.contains(beacon.getBluetoothAddress())){
-                holder.mac.setTextColor(Color.GREEN);
+                holder.mac.setTextColor(Color.BLACK);
             }else if(PublicData.getInstance().checkBeaconSet.contains(beacon.getBluetoothAddress())){
                 holder.mac.setTextColor(Color.RED);
             }

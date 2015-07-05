@@ -396,7 +396,7 @@ public class PublicData extends Application {
                     ibeacon.setLon(Double.valueOf(cursor.getString(cursor.getColumnIndex("longitude"))));
                     ibeacon.setLat(Double.valueOf(cursor.getString(cursor.getColumnIndex("latitude"))));
                     if (imgs.length() > 0){
-                        String[] ar = imgs.split("|");
+                        String[] ar = imgs.split("\\|");
                         for (int i=0;i<ar.length;++i)
                             ibeacon.getImgs().add(ar[i]);
                     }
