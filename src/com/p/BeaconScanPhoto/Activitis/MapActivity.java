@@ -264,7 +264,7 @@ public class MapActivity extends Activity {
         }else{
             try {
                 if(getBuilding().length() > 0 && getFloor().length() > 0) {
-                    mapLayout.changedbmap(getBuilding(), getFloor());
+                    mapLayout.changedbmap(getBuilding(), getFloor(),true);
                     drawLocation(coordx, coordy);
                 }else{
                     Toast.makeText(this,"无此beacon位置信息",Toast.LENGTH_SHORT).show();
