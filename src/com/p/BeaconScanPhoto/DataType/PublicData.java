@@ -272,7 +272,7 @@ public class PublicData extends Application {
     }
     public void initWithConfig(){
         SharedPreferences pre = PreferenceManager.getDefaultSharedPreferences(this);
-        String loc = pre.getString("beacon_location","local");
+        String loc = pre.getString("beacon_location","gps");
         Log.d("prefer",loc);
         if (loc.equals("gps")){
             setLocationType(LOCATE_GPS);
@@ -293,6 +293,28 @@ public class PublicData extends Application {
             beaconExpirationPeriod = 2000;
         }
     }
+    public String[] getFoldFiles(String absFilePath) {
+        File file = new File(absFilePath);
+        if (file == null || file.isDirectory() == false)
+            return null;
+        //过滤，获取特定命名文件，过滤掉DB临时文件和存放公共数据的BaseData
+        String[] arrayStr = file.list(new FilenameFilter() {
+
+            @Override
+            public boolean accept(File arg0, String name) {
+                // TODO Auto-generated method stub
+                return name.endsWith(".db") && (!name.equals("BaseData.db"));
+            }
+        });
+        if(arrayStr==null)
+            return null;
+        for (int i = 0; i < arrayStr.length; i++) {
+
+            arrayStr[i] = arrayStr[i].substring(0, arrayStr[i].indexOf("."));
+        }
+        return arrayStr;
+    }
+
     public void setLocationType(boolean type){
         SharedPreferences pre = PreferenceManager.getDefaultSharedPreferences(this);
         if (type == LOCATE_GPS){
@@ -303,10 +325,12 @@ public class PublicData extends Application {
             }catch (NumberFormatException e){
                 gpsScanPeriod = 1000;
             }
-            locationClientOption.setScanSpan(gpsScanPeriod);
-            mLocationClient.setLocOption(locationClientOption);
-            mLocationClient.start();
-            mLocationClient.requestLocation();
+            if (!mLocationClient.isStarted()) {
+                locationClientOption.setScanSpan(gpsScanPeriod);
+                mLocationClient.setLocOption(locationClientOption);
+                mLocationClient.start();
+                mLocationClient.requestLocation();
+            }
         }else{
             locatingType = LOCATE_LOCAL;
             if (mLocationClient.isStarted())

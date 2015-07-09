@@ -3,6 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".MapActivity" >
+
     <LinearLayout
             android:id="@+id/liner_bottom"
             android:layout_alignParentBottom="true"
@@ -17,6 +18,15 @@
                 android:background="@drawable/backcolor_norock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+        <Button
+                android:id="@+id/bt_changemap"
+                android:layout_weight="1"
+                android:text="更换地图"
+                android:onClick="onChangeMap"
+                android:textColor="#ffffff"
+                android:background="@drawable/backcolor_norock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
     </LinearLayout>
     <com.wxq.draw.MapControler
             android:id="@+id/mapLayout"
@@ -24,5 +34,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#FFCFCFCF" />
+
 
 </RelativeLayout>

@@ -142,7 +142,7 @@ public class NetWorkService extends IntentService {
                             jsonObject.put("address", ibeacon.getDetail());
                             jsonObject.put("address_type",ibeacon.getSumury());
                             jsonObject.put("time", current_time);
-                            Log.d("updebug","bd:"+ibeacon.getBuilding()+"fl:"+ibeacon.getFloor());
+                            //Log.d("updebug","bd:"+ibeacon.getBuilding()+"fl:"+ibeacon.getFloor());
                             if (ibeacon.getLocationType() == PublicData.LOCATE_LOCAL){
                                 jsonObject.put("building", ibeacon.getBuilding());
                                 jsonObject.put("floor", ibeacon.getFloor());
@@ -194,12 +194,14 @@ public class NetWorkService extends IntentService {
                             msg.what = ShowBeaconActivity.REQUEST_FINISH_SUCCESS;
                             ahandler.sendMessage(msg);
                         } else {
-                            if (rejson.getString("message").contains("数据格式错误")) {
+                            if (rejson.getString("message").contains("更新失败")) {
                                 msg.what = ShowBeaconActivity.REQUEST_FINISH_FAIL;
                                 ahandler.sendMessage(msg);
                             } else if (rejson.getString("message").contains("tempid_time_out")) {
                                 msg.what = ShowBeaconActivity.KEY_TIME_OUT;
                                 ahandler.sendMessage(msg);
+                            }else{
+                                ahandler.sendEmptyMessage(ShowBeaconActivity.REQUEST_FINISH_FAIL);
                             }
                         }
 

@@ -21,14 +21,22 @@ import com.lxr.overflot.OverlayIcon;
 import com.lxr.overflot.OverlayLayout;
 import com.p.BeaconScanPhoto.DataType.PublicData;
 import com.p.BeaconScanPhoto.R;
+import com.wxq.draw.DrawDBTool;
 import com.wxq.draw.MapControler;
 
 /**
  * Created by p on 2015/1/29.
  */
 public class MapActivity extends Activity {
-    MapControler mapLayout;
+    public static final int GET_LOCATION_SUCCESS = 1;
+    public static final int GET_LOCATION_FAIL = 2;
 
+
+
+
+    MapControler mapLayout;
+    private String[] mapDbIds  = null;
+    private String[] mapDbNames  = null;
     public String getBuilding() {
         return building;
     }
@@ -126,6 +134,7 @@ public class MapActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.map_activity);
         Intent intent = getIntent();
         String macd = "Beacon";
         if (intent.hasExtra("mac")) {
@@ -150,15 +159,50 @@ public class MapActivity extends Activity {
         getActionBar().setIcon(
                 new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.backcolor_norock));
-        setContentView(R.layout.map_activity);
+
 
 
         mapLayout = (MapControler) findViewById(R.id.mapLayout);
         if (mapLayout == null || !mapLayout.isSuccess()) {
+            setResult(GET_LOCATION_FAIL);
             finish();
+        }else {
+            initMap();
+            initNewLocationView();
+        }
+    }
+    private void initMap(){
+        String dbDir=android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+        dbDir += "/vMapDBFile/DBfile";//数据库所在目录
+        mapDbIds = PublicData.getInstance().getFoldFiles(dbDir);
+        mapDbNames = new String[mapDbIds.length];
+        for (int i = 0; i < mapDbIds.length; i++) {
+            String nameDB = mapDbIds[i];
+            DrawDBTool tool = new DrawDBTool(this);
+            tool.setDBName(nameDB);
+            String name = tool.getMallName();
+            mapDbNames[i] = name;
+            tool = null;
         }
 
-        initNewLocationView();
+    }
+    public void onChangeMap(View v) {
+        new AlertDialog.Builder(this)
+                .setTitle("请选择")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setSingleChoiceItems(mapDbNames, 0,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                // TODO Auto-generated method stub
+
+                                String dbName = mapDbIds[which];
+                                mapLayout.changedbmap(dbName, "null", false);
+                                dialog.dismiss();
+                            }
+
+                        }).setNegativeButton("取消", null).show();
     }
 
     private void initNewLocationView() {
@@ -248,40 +292,6 @@ public class MapActivity extends Activity {
                         1,
                         paintEmptyc);
     }
-    public void onChangeMap(View v) {
-        if(getBuilding() == null || getFloor() == null){
-            new AlertDialog.Builder(this)
-                    .setTitle("警告")
-                    .setMessage("该beacon尚未标记地图位置")
-                    .setIcon(android.R.drawable.ic_dialog_info)
-                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    })
-                    .create().show();
-        }else{
-            try {
-                if(getBuilding().length() > 0 && getFloor().length() > 0) {
-                    mapLayout.changedbmap(getBuilding(), getFloor(),true);
-                    drawLocation(coordx, coordy);
-                }else{
-                    Toast.makeText(this,"无此beacon位置信息",Toast.LENGTH_SHORT).show();
-                }
-            }catch (Exception e){
-                Toast.makeText(this,"无此beacon位置信息",Toast.LENGTH_SHORT).show();
-            }
-
-            /*FloatView fView=mapLayout.getFloatView();
-            Paint p=new Paint();
-            p.setColor(Color.RED);
-            p.setStyle(Paint.Style.FILL_AND_STROKE);
-            fView.addCircle("hah", Float.valueOf(coordx), Float.valueOf(coordy), 1, p);
-            */
-
-        }
-    }
     private void drawLocation(String x, String y) {
         Paint paintEmptyB = new Paint();
         paintEmptyB.setStyle(Paint.Style.FILL);
@@ -336,7 +346,7 @@ public class MapActivity extends Activity {
                             intent.putExtra("fl", getNewFloor());
                             intent.putExtra("nx", newcx);
                             intent.putExtra("ny", newcy);
-                            setResult(0,intent);
+                            setResult(GET_LOCATION_SUCCESS,intent);
                             MapActivity.this.finish();
                         } else {
                             Toast.makeText(MapActivity.this,"尚未选择位置！",Toast.LENGTH_SHORT).show();

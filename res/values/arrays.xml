@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="beacon_location">
-        <item>GPS(百度自动)需要网络连接，GPS</item>
+        <item>GPS(需要连接网络)</item>
         <item>室内手动点选</item>
     </string-array>
     <string-array name="beacon_location_value">

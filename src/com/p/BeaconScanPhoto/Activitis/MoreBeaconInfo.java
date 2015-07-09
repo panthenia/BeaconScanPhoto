@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.*;
@@ -33,8 +34,8 @@ public class MoreBeaconInfo extends Activity {
     public static final boolean SHOW_TYPE_NEW = true;
     public static final boolean SHOW_TYPE_OLD = false;
 
-    private String bd,fl;
-    private double x,y;
+    private String bd = "-1",fl = "-1";
+    private double x = 0,y = 0;
     private LinearLayout beacon_img_list = null;
     private ImageView locateChoose = null;
     private TextView locationVal = null;
@@ -203,17 +204,35 @@ public class MoreBeaconInfo extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_CODE_LOCAL_LOCATION:
-                if (data != null){
-                    if (data.hasExtra("bd"))
-                        bd = data.getStringExtra("bd");
-                    if (data.hasExtra("fl"))
-                        fl = data.getStringExtra("fl");
-                    if (data.hasExtra("nx"))
-                        x = data.getFloatExtra("nx", 0);
-                    if (data.hasExtra("ny"))
-                        y = data.getFloatExtra("ny",0);
-                    locationVal.setText(String.format("Building:%s-Floor:%s-X:%s-Y:%s",bd,fl,x,y));
+                if (resultCode == MapActivity.GET_LOCATION_SUCCESS) {
+                    if (data != null) {
+                        if (data.hasExtra("bd"))
+                            bd = data.getStringExtra("bd");
+                        if (data.hasExtra("fl"))
+                            fl = data.getStringExtra("fl");
+                        if (data.hasExtra("nx"))
+                            x = data.getFloatExtra("nx", 0);
+                        if (data.hasExtra("ny"))
+                            y = data.getFloatExtra("ny", 0);
+                        locationVal.setText(String.format("Building:%s-Floor:%s-X:%s-Y:%s", bd, fl, x, y));
 
+                    }
+                }else {
+                    PublicData.getInstance().setLocationType(PublicData.LOCATE_GPS);
+                    new AlertDialog.Builder(this)
+                            .setTitle("提示")
+                            .setMessage("手机中无室内地图数据库，是否切换至GPS定位模式")
+                            .setCancelable(false)
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO Auto-generated method stub
+                                    beacon_loc_text.setText("GPS(百度)模式，点击获取位置->");
+                                }
+                            })
+                            .create()
+                            .show();
                 }
                 break;
             case REQUEST_CODE_CAMERA:
