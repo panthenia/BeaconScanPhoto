@@ -80,6 +80,7 @@
         <activity android:name=".Activitis.NetworkActivity"
                   android:theme="@android:style/Theme.Holo.Light"
                   android:screenOrientation="portrait"/>
+        <activity android:name=".Activitis.BMapActivity"/>
         <!-- 服务配置 -->
         <service android:name="com.lef.ibeacon.service.UpdateService" />
         <service

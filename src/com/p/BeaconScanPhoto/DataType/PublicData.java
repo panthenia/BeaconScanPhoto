@@ -125,20 +125,26 @@ public class PublicData extends Application {
     public String defaultSumury = "";
     private String port;
     public double latitude,longitude;
+    public float radius;
     public LocationClient mLocationClient = null;
     public LocationClientOption locationClientOption = null;
+
     public BDLocationListener myListener = new BDLocationListener() {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
             Log.d("baidu",""+latitude+"-"+longitude);
             latitude = bdLocation.getLatitude();
             longitude = bdLocation.getLongitude();
+            radius = bdLocation.getRadius();
         }
     };
     @Override
     public void onCreate() {
         super.onCreate();
         self = this;
+        setHas_save_ip(true);
+        setIp("123.57.46.160");
+        setPort("8080");
         du = new DataUtil(this, this.getString(R.string.db_name), null, 1);
         try {
             md5_encriptor = MessageDigest.getInstance("MD5");
@@ -251,6 +257,11 @@ public class PublicData extends Application {
         locationClientOption.setOpenGps(true);
         locationClientOption.setCoorType("bd09ll");
         locationClientOption.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+        locationClientOption.setScanSpan(1000);
+        mLocationClient.setLocOption(locationClientOption);
+        mLocationClient.start();
+        mLocationClient.requestLocation();
+
     }
 
     public void resetStatus(){
@@ -319,22 +330,22 @@ public class PublicData extends Application {
         SharedPreferences pre = PreferenceManager.getDefaultSharedPreferences(this);
         if (type == LOCATE_GPS){
             locatingType = LOCATE_GPS;
-            String loc = pre.getString("gps_scan_period","1000");
-            try {
-                gpsScanPeriod = Integer.valueOf(loc);
-            }catch (NumberFormatException e){
-                gpsScanPeriod = 1000;
-            }
-            if (!mLocationClient.isStarted()) {
-                locationClientOption.setScanSpan(gpsScanPeriod);
-                mLocationClient.setLocOption(locationClientOption);
-                mLocationClient.start();
-                mLocationClient.requestLocation();
-            }
+//            String loc = pre.getString("gps_scan_period","1000");
+//            try {
+//                gpsScanPeriod = Integer.valueOf(loc);
+//            }catch (NumberFormatException e){
+//                gpsScanPeriod = 1000;
+//            }
+//            if (!mLocationClient.isStarted()) {
+//                locationClientOption.setScanSpan(gpsScanPeriod);
+//                mLocationClient.setLocOption(locationClientOption);
+//                mLocationClient.start();
+//                mLocationClient.requestLocation();
+//            }
         }else{
             locatingType = LOCATE_LOCAL;
-            if (mLocationClient.isStarted())
-                mLocationClient.stop();
+//            if (mLocationClient.isStarted())
+//                mLocationClient.stop();
         }
 
     }

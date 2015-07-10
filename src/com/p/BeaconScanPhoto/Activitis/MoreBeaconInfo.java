@@ -181,6 +181,8 @@ public class MoreBeaconInfo extends Activity {
                     startActivityForResult(intent, REQUEST_CODE_LOCAL_LOCATION);
                     dbIbeancon.setLocationType(PublicData.LOCATE_LOCAL);
                 }else{
+                    intent = new Intent(MoreBeaconInfo.this,BMapActivity.class);
+                    startActivity(intent);
                     dbIbeancon.setLat(PublicData.getInstance().latitude);
                     dbIbeancon.setLon(PublicData.getInstance().longitude);
                     dbIbeancon.setLocationType(PublicData.LOCATE_GPS);
