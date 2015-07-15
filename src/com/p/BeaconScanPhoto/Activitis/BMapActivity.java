@@ -1,8 +1,12 @@
 package com.p.BeaconScanPhoto.Activitis;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.TextView;
 import com.baidu.mapapi.map.*;
 import com.baidu.mapapi.model.LatLng;
 import com.p.BeaconScanPhoto.DataType.PublicData;
@@ -19,6 +23,19 @@ public class BMapActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bmaplayout);
+        ActionBar bar = getActionBar();
+        if (bar != null)
+            bar.setTitle("Beaconä½ç½®");
+        int actionBarTitleId = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
+        if (actionBarTitleId > 0) {
+            TextView title = (TextView) findViewById(actionBarTitleId);
+            if (title != null) {
+                title.setTextColor(Color.WHITE);
+            }
+        }
+
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.backcolor_norock));
+
         mMapView = (MapView) findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
         if (mBaiduMap != null) {
@@ -26,7 +43,7 @@ public class BMapActivity extends Activity {
             mBaiduMap.setMyLocationEnabled(true);
             MyLocationData locData = new MyLocationData.Builder()
                     .accuracy(PublicData.getInstance().radius)
-                            // ´Ë´¦ÉèÖÃ¿ª·¢Õß»ñÈ¡µ½µÄ·½ÏòĞÅÏ¢£¬Ë³Ê±Õë0-360
+                            // æ­¤å¤„è®¾ç½®å¼€å‘è€…è·å–åˆ°çš„æ–¹å‘ä¿¡æ¯ï¼Œé¡ºæ—¶é’ˆ0-360
                     .direction(100).latitude(latLng.latitude)
                     .longitude(latLng.longitude).build();
             mBaiduMap.setMyLocationData(locData);
