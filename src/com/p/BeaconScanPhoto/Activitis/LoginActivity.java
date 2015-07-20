@@ -158,8 +158,8 @@ public class LoginActivity extends Activity {
         SharedPreferences.Editor editor = ps.edit();
         editor.clear();
         editor.putBoolean("SaveInfo",true);
-        editor.putString("Ip",PublicData.getInstance().getIp());
-        editor.putString("Port",PublicData.getInstance().getPort());
+//        editor.putString("Ip",PublicData.getInstance().getIp());
+//        editor.putString("Port",PublicData.getInstance().getPort());
         editor.putBoolean("SaveUser",true);
         editor.putString("User",PublicData.getInstance().getUser());
         editor.putString("Psw",PublicData.getInstance().getPsw());
@@ -182,11 +182,11 @@ public class LoginActivity extends Activity {
     }
     public void getSavedInfo(){
         SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.login_preference_name),MODE_PRIVATE);
-        if(preferences.getBoolean("SaveInfo", false)){
-            PublicData.getInstance().setIp(preferences.getString("Ip",""));
-            PublicData.getInstance().setPort(preferences.getString("Port", ""));
-            PublicData.getInstance().setHas_save_ip(true);
-        }else PublicData.getInstance().setHas_save_ip(false);
+//        if(preferences.getBoolean("SaveInfo", false)){
+//            PublicData.getInstance().setIp(preferences.getString("Ip",""));
+//            PublicData.getInstance().setPort(preferences.getString("Port", ""));
+//            PublicData.getInstance().setHas_save_ip(true);
+//        }else PublicData.getInstance().setHas_save_ip(false);
         if(preferences.getBoolean("SaveUser", false)){
             PublicData.getInstance().setUser(preferences.getString("User", ""));
             PublicData.getInstance().setPsw(preferences.getString("Psw", ""));
